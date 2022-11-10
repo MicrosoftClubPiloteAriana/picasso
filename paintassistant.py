@@ -12,6 +12,7 @@ class FillHelper:
         self.color = color
 
     def __enter__(self):
+        turtle.pencolor(self.color)
         turtle.fillcolor(self.color)
         turtle.begin_fill()
         return self

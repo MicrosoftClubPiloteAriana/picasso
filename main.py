@@ -1,7 +1,9 @@
 from turtle import *
-from bezier import CubicBezier
+from svg.path import path
 
+from bezier import CubicBezier
 from paintassistant import PaintAssistant
+from parser import PathParser
 
 
 # We need to scale the original coordinates to fit the screen
@@ -37,27 +39,29 @@ def bezier_cubic(startx, starty, x1, y1, x2, y2, endx, endy):
         goto(c(x), c(y))
 
 
-if __name__ == '__main__':
+def render_worldcup():
     s = Screen()
     assistant = PaintAssistant()
     setup(SCREEN_WIDTH, SCREEN_HEIGHT)
     setworldcoordinates(0, SCREEN_HEIGHT, SCREEN_WIDTH, 0)
+    title("Fifa World Cup 2022")
+    speed(5)
+    tracer(5, 0)
 
-    with assistant.fill("#9a9794"):
-        moveto(522.00,638.67)
-        bezier_cubic(522.00,638.67, 522.00,638.67, 652.00,904.67, 522.00,938.67)
-        bezier_cubic(522.00,938.67, 390.67,938.00, 522.67,638.00, 522.67,638.00)
+    for path_segment in PathParser("samples/worldcupqatar2022.xml").svg_path:
+        if isinstance(path_segment, path.CubicBezier):
+            startx, starty = path_segment.start.real, path_segment.start.imag
+            endx, endy = path_segment.end.real, path_segment.end.imag
+            x1, y1 = path_segment.control1.real, path_segment.control1.imag
+            x2, y2 = path_segment.control2.real, path_segment.control2.imag
+            bezier_cubic(startx, starty, x1, y1, x2, y2, endx, endy)
 
-    with assistant.fill("#8f8c8a"):
-        moveto(544.00,684.00)
-        bezier_cubic(544.00,684.00, 544.00,684.00, 556.62,715.50, 556.62,715.50)
-        bezier_cubic(556.62,715.50, 556.62,715.50, 507.67,813.67, 532.00,881.00)
-        bezier_cubic(532.00,881.00, 483.67,832.67 ,544.00,684.33, 544.00,684.33)
-
-    with assistant.fill("#aca9a6"):
-        moveto(524.00,640.67)
-        bezier_cubic(524.00,640.67, 524.00,640.67, 447.33,836.67, 493.50,930.50)
-        bezier_cubic(493.50,930.50, 413.33,882.67, 522.53,640.58, 522.53,640.58)
-
+        elif isinstance(path_segment, path.Move):
+            x, y = path_segment.start.real, path_segment.start.imag
+            moveto(x, y)
+    hideturtle()
     s.mainloop()
 
+
+if __name__ == '__main__':
+    render_worldcup()

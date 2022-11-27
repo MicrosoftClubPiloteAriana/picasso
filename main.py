@@ -39,16 +39,8 @@ def bezier_cubic(startx, starty, x1, y1, x2, y2, endx, endy):
         goto(c(x), c(y))
 
 
-def render_worldcup():
-    s = Screen()
-    assistant = PaintAssistant()
-    setup(SCREEN_WIDTH, SCREEN_HEIGHT)
-    setworldcoordinates(0, SCREEN_HEIGHT, SCREEN_WIDTH, 0)
-    title("Fifa World Cup 2022")
-    speed(5)
-    tracer(5, 0)
-
-    for path_segment in PathParser("samples/worldcupqatar2022.xml").svg_path:
+def render_path(file):
+    for path_segment in PathParser(file).svg_path:
         if isinstance(path_segment, path.CubicBezier):
             startx, starty = path_segment.start.real, path_segment.start.imag
             endx, endy = path_segment.end.real, path_segment.end.imag
@@ -59,6 +51,24 @@ def render_worldcup():
         elif isinstance(path_segment, path.Move):
             x, y = path_segment.start.real, path_segment.start.imag
             moveto(x, y)
+
+
+def render_worldcup():
+    s = Screen()
+    assistant = PaintAssistant()
+    setup(SCREEN_WIDTH, SCREEN_HEIGHT)
+    setworldcoordinates(0, SCREEN_HEIGHT, SCREEN_WIDTH, 0)
+    title("Fifa World Cup 2022")
+    speed(5)
+    tracer(1, 0)
+    bgcolor("#777777")
+
+    tracer(10, 0)
+    with assistant.fill("#8a1538"):
+        render_path("samples/qatarflag.xml")
+    color("#ffffff")
+    render_path("samples/worldcupqatar2022.xml")
+
     hideturtle()
     s.mainloop()
 

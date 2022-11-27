@@ -60,12 +60,13 @@ def render_worldcup():
     setworldcoordinates(0, SCREEN_HEIGHT, SCREEN_WIDTH, 0)
     title("Fifa World Cup 2022")
     speed(5)
-    tracer(1, 0)
-    bgcolor("#777777")
 
-    tracer(10, 0)
+    tracer(5, 0)
+    bgcolor("#777777")
     with assistant.fill("#8a1538"):
         render_path("samples/qatarflag.xml")
+
+    tracer(10, 0)
     color("#ffffff")
     render_path("samples/worldcupqatar2022.xml")
 
